@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./assets/images/favicon-32x32.png"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Frontend Mentor | Mortgage repayment calculator</title>
+  </head>
+
+  <body>
+    <section>
+      <div class="container">
+        <div class="left-side">
+          <div class="header">
+            <h1>Mortgage Calculator</h1>
+            <a href="">Clear All</a>
+          </div>
+          <form onsubmit="return validateForm()" method="post" name="myForm">
+            <div id="row-1">
+              <p>Mortgage Amount</p>
+              <input id="input-text" type="text" name="mortgageAmount" />
+            </div>
+            <div id="row-2">
+              <div>
+                <p>Mortgage Term</p>
+                <input id="input-text" type="text" name="mortgageTerms" />
+              </div>
+              <div>
+                <p>Interest Rate</p>
+                <input id="input-text" type="text" name="interestRate" />
+              </div>
+            </div>
+            <button type="submit" value="Submit">
+              <i class="fa-solid fa-calculator"></i>Calculate Repayments
+            </button>
+          </form>
+        </div>
+        <div class="right-side">
+          <div class="right-header">
+            <h1>Your Result</h1>
+            <p>
+              How we calculate: the interest rate is calculated yearly which
+              means as you pay of the loan the interest rate will decrease.
+              First year: total mortgage amount times interest rate, next year
+              total mortgage amount minus what you amortized the year before
+              times interest rate, until the loan is payed off.
+            </p>
+          </div>
+          <div class="right-card">
+            <p>Your monthly payment</p>
+            <h1 id="monthly-payment">£0.00</h1>
+            <hr />
+            <p>Total youll repay over the term</p>
+            <h3 id="total-payment">£0.00</h3>
+          </div>
+        </div>
+      </div>
+      <div class="attribution">
+        Challenge by
+        <a href="https://www.frontendmentor.io?ref=challenge">Frontend Mentor</a
+        >. Coded by <a href="https://gammalldev.netlify.app">gammalldev</a>.
+      </div>
+    </section>
+
+    <script>
+      function validateForm() {
+        let mortgageAmount = document.forms["myForm"]["mortgageAmount"].value;
+        let mortgageTerms = document.forms["myForm"]["mortgageTerms"].value;
+        let interestRate = document.forms["myForm"]["interestRate"].value;
+
+        let mortgage = parseFloat(mortgageAmount);
+        let years = parseFloat(mortgageTerms);
+        interestRate = parseFloat(interestRate) / 100;
+
+        if (mortgageAmount && mortgageTerms && interestRate !== null) {
+          let yearlyAmortise = mortgage / years;
+          let totalPayment = 0;
+
+          for (let i = mortgage; i > 0; i -= yearlyAmortise) {
+            let yearlyInterest = i * interestRate;
+            totalPayment += yearlyAmortise + yearlyInterest;
+          }
+
+          let monthlyPayment = totalPayment / (mortgageTerms * 12);
+
+          document.getElementById(
+            "monthly-payment"
+          ).textContent = `£${monthlyPayment.toFixed(2)}`;
+          document.getElementById(
+            "total-payment"
+          ).textContent = `£${totalPayment.toFixed(2)}`;
+          return false;
+        }
+
+        alert("Please enter info above");
+        return false;
+      }
+    </script>
+  </body>
+</html>
